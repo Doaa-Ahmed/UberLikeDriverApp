@@ -65,8 +65,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         editor = sharedPref.edit();
 
         if(! sharedPref.getBoolean("loggedIn", false)){
+
             Intent i = new Intent(MainActivity.this, Login.class);
             startActivity(i);
+            finish();
         }
         else {
             TextView text = (TextView) findViewById(R.id.textView);
@@ -107,6 +109,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        }
+        else if(id == R.id.item1){
+            editor.clear().commit();
+           // editor.commit();
+            Intent i = new Intent(MainActivity.this, Login.class);
+            startActivity(i);
         }
 
         return super.onOptionsItemSelected(item);

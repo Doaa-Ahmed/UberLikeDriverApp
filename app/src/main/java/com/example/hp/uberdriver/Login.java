@@ -33,6 +33,7 @@ public class Login extends AppCompatActivity {
     private SharedPreferences.Editor editor;
     private String id;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,7 +46,7 @@ public class Login extends AppCompatActivity {
         login = (Button) findViewById(R.id.loginButton);
         mail = (EditText) findViewById(R.id.mail);
         pass = (EditText) findViewById(R.id.pass);
-
+    //    Toast.makeText(getApplicationContext(), sharedPref.getString("name", null), Toast.LENGTH_LONG).show();
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -55,6 +56,7 @@ public class Login extends AppCompatActivity {
                     if(!pass_.equals("")){
                         loginUser loginuser = new loginUser();
                         loginuser.execute();
+
                     }
                     else{
                         Toast.makeText(getApplicationContext(),"Please your password",
@@ -141,12 +143,7 @@ public class Login extends AppCompatActivity {
 
         // private Exception exception;
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        protected void setID() throws JSONException {
+         protected void setID() throws JSONException {
             JSONObject jObject = new JSONObject(jsonId);
             valid = jObject.getBoolean("valid");
             if(valid == true){
@@ -158,18 +155,18 @@ public class Login extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-
             // sharedPref.getString("name", null);
             if(valid) {
                 editor.putBoolean("loggedIn", true);
                 editor.putString("id", id);
                 editor.commit();
-                loginName login_name = new loginName();
-                login_name.execute();
-
+                Intent i = new Intent(Login.this, MainActivity.class);
+                startActivity(i);
+                //loginName login_name = new loginName();
+                //login_name.execute();
             }
             else{
-                Toast.makeText(getBaseContext(), stringBuilder, Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), stringBuilder, Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -183,17 +180,20 @@ public class Login extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... voids) {
             try {
+
                 URL url = new URL(myUrl);
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
                 try {
                     urlConnection.setRequestMethod("GET");
-                    urlConnection.setRequestProperty("driver_id", id);
+                  //  Toast.makeText(getApplicationContext(), id , Toast.LENGTH_LONG).show();
+                    urlConnection.setRequestProperty("driver_id", "57360f02f0d0d86819181e4c");
 
                     urlConnection.setDoInput(true);
                     urlConnection.setDoOutput(true);
                     urlConnection.connect();
 
-                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+                    InputStreamReader isr = new InputStreamReader(urlConnection.getInputStream());
+                    BufferedReader bufferedReader = new BufferedReader(isr);
                     stringBuilder = new StringBuilder();
                     String line;
                     while ((line = bufferedReader.readLine()) != null) {
